@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<constant name="struts-devModel" value="true" />
+	<constant name="struts.action.extension" value="action,do,api" />
+	<constant name="struts.multipart.maxSize" value="100000000" />
+	<constant name="struts.i18n.encoding" value="UTF-8"></constant>
+	<constant name="struts.multipart.saveDir" value="/tmp" />
+	<constant name="struts.multipart.parser" value="jakarta" />
+
+	<package name="struts2" extends="struts-default">
+		<interceptors>
+			<interceptor name="myInterceptor" class="com.calow.cim.nio.filter.MyInterceptor">
+				<param name="excludeMethods">login</param>
+			</interceptor>
+			
+			<interceptor-stack name="myInterceptorStack">  
+                <interceptor-ref name="myInterceptor"/>  
+                <interceptor-ref name="defaultStack"/>  
+            </interceptor-stack>
+		</interceptors>
+		
+		<default-interceptor-ref name="myInterceptorStack"/>
+	</package>
+
+	<package name="admin" extends="struts-default" namespace="/admin">
+		<action name="session_*" class="com.calow.ichat.admin.action.SessionAction"
+			method="{1}">
+			<result name="list" type="dispatcher">/console/session/manage.jsp</result>
+		</action>
+	</package>
+
+	<package name="cgi" extends="struts-default" namespace="/cgi">
+		<action name="message_*" class="com.calow.ichat.api.action.MessageAction"
+			method="{1}"></action>
+	</package>
+	
+	<package name="msg" extends="struts-default" namespace="/user">
+		<action name="user_*" class="com.calow.ichat.api.action.LoginAction"
+			method="login">
+		</action>
+	</package>
+	
+	<package name="csm" extends="struts-default" namespace="/csm">
+		<action name="message_send" class="com.calow.ichat.api.action.ClientMessageAction"
+			method="sendMessage">
+		</action>
+	</package>
+</struts>
