@@ -1,11 +1,15 @@
 package com.calow.ichat.entity;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
+import java.sql.Blob;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,7 +28,7 @@ public class Storage implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Integer SId;
-	private String SContent;
+	private byte[] SContent;
 	private Set<Resource> resources = new HashSet<Resource>(0);
 
 	// Constructors
@@ -34,13 +38,13 @@ public class Storage implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public Storage(Integer SId, String SContent) {
+	public Storage(Integer SId, byte[] SContent) {
 		this.SId = SId;
 		this.SContent = SContent;
 	}
 
 	/** full constructor */
-	public Storage(Integer SId, String SContent, Set<Resource> resources) {
+	public Storage(Integer SId, byte[] SContent, Set<Resource> resources) {
 		this.SId = SId;
 		this.SContent = SContent;
 		this.resources = resources;
@@ -48,6 +52,7 @@ public class Storage implements java.io.Serializable {
 
 	// Property accessors
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "S_ID", unique = true, nullable = false)
 	public Integer getSId() {
 		return this.SId;
@@ -58,11 +63,11 @@ public class Storage implements java.io.Serializable {
 	}
 
 	@Column(name = "S_Content", nullable = false)
-	public String getSContent() {
+	public byte[] getSContent() {
 		return this.SContent;
 	}
 
-	public void setSContent(String SContent) {
+	public void setSContent(byte[] SContent) {
 		this.SContent = SContent;
 	}
 

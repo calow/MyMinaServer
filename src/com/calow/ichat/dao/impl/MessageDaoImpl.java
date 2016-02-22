@@ -1,16 +1,24 @@
 package com.calow.ichat.dao.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.util.List;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import com.calow.ichat.dao.MessageDao;
 import com.calow.ichat.entity.Message;
+import com.calow.ichat.entity.Storage;
 
 public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 
@@ -23,7 +31,7 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 
 		JSONArray jsonArray = null;
 		Session session = null;
-		String sql = "SELECT m.M_ID, m.M_Content, m.M_ResourceID, m.M_CreateTime, m.M_groupID, g.G_Name, m.M_Type, u1.U_LoginID as receiver, u2.U_LoginID as sender, u2.U_NickName, ms.MS_ID, ms.MS_State "
+		String sql = "SELECT m.M_ID, m.M_Content, m.M_ResourceID, m.M_CreateTime, m.M_groupID, g.G_Name, m.M_Type, u1.U_LoginID as receiver, u2.U_LoginID as sender, u2.U_NickName, ms.MS_ID, ms.MS_State, g.G_JSon "
 				+ "from messageset ms INNER JOIN message m ON m.M_ID = ms.MS_MessageID "
 				+ "INNER JOIN `group` g ON g.G_ID = m.M_groupID "
 				+ "INNER JOIN `user` u1 ON u1.U_ID = ms.MS_ToUser "
@@ -57,6 +65,7 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 			jsonObject.put("senderNickName", o[9]);
 			jsonObject.put("messageSetId", o[10]);
 			jsonObject.put("statu", o[11]);
+			jsonObject.put("JSonId", o[12]);
 			jsonArray.add(jsonObject);
 		}
 		return jsonArray.toString();

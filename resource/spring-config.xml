@@ -65,6 +65,10 @@
 	<bean id="messageSetDao" class="com.calow.ichat.dao.impl.MessageSetDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
 	</bean>
+	
+	<bean id="storageDao" class="com.calow.ichat.dao.impl.StorageDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
+	</bean>
 
 	<!-- =============================================================== -->
 	<!-- 配置声明式事务 -->
@@ -115,5 +119,5 @@
 	<bean id="userService" class="com.calow.ichat.service.impl.UserServiceImpl"></bean>
 	<bean id="messageService" class="com.calow.ichat.service.impl.MessageServiceImpl"></bean>
 	<bean id="groupService" class="com.calow.ichat.service.impl.GroupServiceImpl"></bean>
-
+	<bean id="storageService" class="com.calow.ichat.service.impl.StorageServiceImpl"></bean>
 </beans>

@@ -48,4 +48,13 @@
 			method="sendMessage">
 		</action>
 	</package>
+	
+	<package name="upanddown" extends="struts-default" namespace="/upanddown">
+		<action name="upload_file" class="com.calow.ichat.api.action.UploadAction"
+			method="uploadFile">
+		</action>
+		<action name="download_file" class="com.calow.ichat.api.action.DownloadAction"
+			method="downloadFile">
+		</action>
+	</package>
 </struts>

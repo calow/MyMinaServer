@@ -16,8 +16,7 @@ public class MessageSetDaoImpl extends HibernateDaoSupport implements
 	@Override
 	public int addMessageSet(Messageset messageset) {
 		int result = -1;
-		Session session = null;
-		session = this.getSession();
+		Session session = this.getSession();
 		result = (Integer) session.save(messageset);
 		return result;
 	}
