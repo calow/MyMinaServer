@@ -28,6 +28,7 @@ public class User implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Integer UId;
+	private Resource resource;
 	private Userstate userstate;
 	private String ULoginId;
 	private String UNickName;
@@ -48,8 +49,9 @@ public class User implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public User(Userstate userstate, String ULoginId, String UNickName,
-			String UPassWord) {
+	public User(Resource resource, Userstate userstate, String ULoginId,
+			String UNickName, String UPassWord) {
+		this.resource = resource;
 		this.userstate = userstate;
 		this.ULoginId = ULoginId;
 		this.UNickName = UNickName;
@@ -57,11 +59,13 @@ public class User implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public User(Userstate userstate, String ULoginId, String UNickName,
-			String UPassWord, String USignture, Set<Friendgroup> friendgroups,
-			Set<Group> groups, Set<Message> messages,
-			Set<Groupusers> groupuserses, Set<Messageset> messagesets,
-			Set<Friend> friendsForFFriendId, Set<Friend> friendsForFUserId) {
+	public User(Resource resource, Userstate userstate, String ULoginId,
+			String UNickName, String UPassWord, String USignture,
+			Set<Friendgroup> friendgroups, Set<Group> groups,
+			Set<Message> messages, Set<Groupusers> groupuserses,
+			Set<Messageset> messagesets, Set<Friend> friendsForFFriendId,
+			Set<Friend> friendsForFUserId) {
+		this.resource = resource;
 		this.userstate = userstate;
 		this.ULoginId = ULoginId;
 		this.UNickName = UNickName;
@@ -86,6 +90,16 @@ public class User implements java.io.Serializable {
 
 	public void setUId(Integer UId) {
 		this.UId = UId;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "U_UserPicture", nullable = false)
+	public Resource getResource() {
+		return this.resource;
+	}
+
+	public void setResource(Resource resource) {
+		this.resource = resource;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -116,7 +130,7 @@ public class User implements java.io.Serializable {
 		this.UNickName = UNickName;
 	}
 
-	@Column(name = "U_PassWord", nullable = false, length = 20)
+	@Column(name = "U_PassWord", nullable = false, length = 40)
 	public String getUPassWord() {
 		return this.UPassWord;
 	}

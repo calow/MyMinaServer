@@ -12,4 +12,5 @@ public interface UserService {
 	
 	public String getGroupFriendsList(String account);
 
+	public User getUserByUserId(String userId);
 }

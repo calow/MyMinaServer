@@ -14,19 +14,11 @@ import com.calow.ichat.entity.User;
 
 public class GroupDaoImpl extends HibernateDaoSupport implements GroupDao {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Group getGroupByGroupId(int groupId) {
 		Group result = null;
-		Session session = null;
-		String hql = "From Group g where g.GId=:groupId";
-		session = this.getSession();
-		Query query = session.createQuery(hql);
-		query.setParameter("groupId", groupId);
-		List<Group> list = query.list();
-		if (list.size() > 0 && list != null) {
-			result = list.get(0);
-		}
+		Session session = this.getSession();
+		result = (Group) session.get(Group.class, groupId);
 		return result;
 	}
 

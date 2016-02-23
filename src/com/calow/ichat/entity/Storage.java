@@ -1,8 +1,5 @@
 package com.calow.ichat.entity;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import java.sql.Blob;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -10,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,7 +22,7 @@ public class Storage implements java.io.Serializable {
 	// Fields
 
 	/**
-	 * 附件表
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private Integer SId;
@@ -37,15 +35,8 @@ public class Storage implements java.io.Serializable {
 	public Storage() {
 	}
 
-	/** minimal constructor */
-	public Storage(Integer SId, byte[] SContent) {
-		this.SId = SId;
-		this.SContent = SContent;
-	}
-
 	/** full constructor */
-	public Storage(Integer SId, byte[] SContent, Set<Resource> resources) {
-		this.SId = SId;
+	public Storage(byte[] SContent, Set<Resource> resources) {
 		this.SContent = SContent;
 		this.resources = resources;
 	}
@@ -62,7 +53,7 @@ public class Storage implements java.io.Serializable {
 		this.SId = SId;
 	}
 
-	@Column(name = "S_Content", nullable = false)
+	@Column(name = "S_Content")
 	public byte[] getSContent() {
 		return this.SContent;
 	}

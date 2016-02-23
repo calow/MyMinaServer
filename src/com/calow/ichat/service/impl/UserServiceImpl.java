@@ -44,4 +44,13 @@ public class UserServiceImpl implements UserService {
 		return userDao.getGroupFriendsList(account);
 	}
 
+	@Override
+	public User getUserByUserId(String userId) {
+		UserDao userDao = (UserDao) ContextHolder
+				.getBean("userDao");
+		return userDao.getUserByUserAccount(userId);
+	}
+	
+	
+
 }

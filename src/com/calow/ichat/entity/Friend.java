@@ -20,7 +20,7 @@ public class Friend implements java.io.Serializable {
 	// Fields
 
 	/**
-	 * 用户好友表
+	 * 好友表
 	 */
 	private static final long serialVersionUID = 1L;
 	private Integer FId;

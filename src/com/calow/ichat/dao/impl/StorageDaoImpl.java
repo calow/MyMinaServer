@@ -10,7 +10,9 @@ public class StorageDaoImpl extends HibernateDaoSupport implements StorageDao {
 
 	@Override
 	public Storage getStorageById(int storageId) {
-		return null;
+		Session session = this.getSession();
+		Storage storage= (Storage) session.get(Storage.class, storageId);
+		return storage;
 	}
 
 	@Override

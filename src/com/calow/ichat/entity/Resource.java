@@ -6,6 +6,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -29,6 +31,9 @@ public class Resource implements java.io.Serializable {
 	private Storage storage;
 	private String RName;
 	private Integer RSize;
+	private String RFormat;
+	private Set<User> users = new HashSet<User>(0);
+	private Set<Group> groups = new HashSet<Group>(0);
 	private Set<Message> messages = new HashSet<Message>(0);
 
 	// Constructors
@@ -38,25 +43,29 @@ public class Resource implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public Resource(Integer RId, Storage storage, String RName, Integer RSize) {
-		this.RId = RId;
+	public Resource(Storage storage, String RName, Integer RSize, String RFormat) {
 		this.storage = storage;
 		this.RName = RName;
 		this.RSize = RSize;
+		this.RFormat = RFormat;
 	}
 
 	/** full constructor */
-	public Resource(Integer RId, Storage storage, String RName, Integer RSize,
+	public Resource(Storage storage, String RName, Integer RSize,
+			String RFormat, Set<User> users, Set<Group> groups,
 			Set<Message> messages) {
-		this.RId = RId;
 		this.storage = storage;
 		this.RName = RName;
 		this.RSize = RSize;
+		this.RFormat = RFormat;
+		this.users = users;
+		this.groups = groups;
 		this.messages = messages;
 	}
 
 	// Property accessors
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "R_ID", unique = true, nullable = false)
 	public Integer getRId() {
 		return this.RId;
@@ -92,6 +101,33 @@ public class Resource implements java.io.Serializable {
 
 	public void setRSize(Integer RSize) {
 		this.RSize = RSize;
+	}
+
+	@Column(name = "R_Format", nullable = false, length = 20)
+	public String getRFormat() {
+		return this.RFormat;
+	}
+
+	public void setRFormat(String RFormat) {
+		this.RFormat = RFormat;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "resource")
+	public Set<User> getUsers() {
+		return this.users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "resource")
+	public Set<Group> getGroups() {
+		return this.groups;
+	}
+
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "resource")

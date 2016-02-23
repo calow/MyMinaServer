@@ -83,7 +83,7 @@ public class MessageServiceImpl implements MessageService {
 			message.setUser(user);
 		}
 		// 获取消息发送聊天室对象
-		Group group = gd.getGroupByGroupId(Integer.parseInt(groupId));
+		Group group = gd.getGroupByGroupId(Integer.valueOf(groupId));
 		short groupType = 0;
 		if (group != null) {
 			message.setGroup(group);

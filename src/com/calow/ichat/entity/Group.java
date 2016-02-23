@@ -15,10 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.calow.ichat.entity.Groupusers;
-import com.calow.ichat.entity.Message;
-import com.calow.ichat.entity.User;
-
 /**
  * Group entity. @author MyEclipse Persistence Tools
  */
@@ -33,6 +29,7 @@ public class Group implements java.io.Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private Integer GId;
+	private Resource resource;
 	private User user;
 	private String GName;
 	private Timestamp GCreateTime;
@@ -48,8 +45,9 @@ public class Group implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public Group(User user, String GName, Timestamp GCreateTime, Short GType,
-			String GJson) {
+	public Group(Resource resource, User user, String GName,
+			Timestamp GCreateTime, Short GType, String GJson) {
+		this.resource = resource;
 		this.user = user;
 		this.GName = GName;
 		this.GCreateTime = GCreateTime;
@@ -58,8 +56,10 @@ public class Group implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Group(User user, String GName, Timestamp GCreateTime, Short GType,
-			String GJson, Set<Message> messages, Set<Groupusers> groupuserses) {
+	public Group(Resource resource, User user, String GName,
+			Timestamp GCreateTime, Short GType, String GJson,
+			Set<Message> messages, Set<Groupusers> groupuserses) {
+		this.resource = resource;
 		this.user = user;
 		this.GName = GName;
 		this.GCreateTime = GCreateTime;
@@ -79,6 +79,16 @@ public class Group implements java.io.Serializable {
 
 	public void setGId(Integer GId) {
 		this.GId = GId;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "G_GroupPic", nullable = false)
+	public Resource getResource() {
+		return this.resource;
+	}
+
+	public void setResource(Resource resource) {
+		this.resource = resource;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

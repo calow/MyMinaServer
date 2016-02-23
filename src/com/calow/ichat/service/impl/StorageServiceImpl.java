@@ -14,4 +14,14 @@ public class StorageServiceImpl implements StorageService {
 		storageDao.updateStorage(storage);
 	}
 
+	@Override
+	public byte[] getStorageByResourceId(int storageId) {
+		byte[] result = null;
+		StorageDao storageDao = (StorageDao) ContextHolder
+				.getBean("storageDao");
+		Storage storage = storageDao.getStorageById(storageId);
+		result = storage.getSContent();
+		return result;
+	}
+
 }

@@ -24,7 +24,7 @@ public class Friendgroup implements java.io.Serializable {
 	// Fields
 
 	/**
-	 * 用户分组表
+	 * 好友分组表
 	 */
 	private static final long serialVersionUID = 1L;
 	private Integer fgId;

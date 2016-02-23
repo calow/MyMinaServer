@@ -56,5 +56,11 @@
 		<action name="download_file" class="com.calow.ichat.api.action.DownloadAction"
 			method="downloadFile">
 		</action>
+		<action name="download_groupPic" class="com.calow.ichat.api.action.DownloadAction"
+			method="downloadGroupPic">
+		</action>
+		<action name="download_userPic" class="com.calow.ichat.api.action.DownloadAction"
+			method="downloadUserPic">
+		</action>
 	</package>
 </struts>
