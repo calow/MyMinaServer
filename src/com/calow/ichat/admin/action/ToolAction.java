@@ -9,7 +9,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,13 +16,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 
 import com.calow.cim.nio.mutual.PreTool;
+import com.calow.cim.nio.mutual.ToolParams;
 import com.calow.ichat.common.util.ContextHolder;
 import com.calow.ichat.entity.Tool;
+import com.calow.ichat.entity.Toolversion;
 import com.calow.ichat.service.ToolService;
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
 
-public class ToolAction extends ActionSupport {
+public class ToolAction extends ActionSupport implements
+		ModelDriven<ToolParams> {
 
 	private File file1; // 具体上传文件的 引用 , 指向临时目录中的临时文件
 	private String file1FileName; // 上传文件的名字 ,FileName 固定的写法
@@ -34,6 +37,13 @@ public class ToolAction extends ActionSupport {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	ToolParams tp = new ToolParams();
+
+	@Override
+	public ToolParams getModel() {
+		return tp;
+	}
+
 	public String getToolList() {
 		String result = "success";
 		String start = null;
@@ -41,8 +51,8 @@ public class ToolAction extends ActionSupport {
 		List<Tool> tools;
 		try {
 			HttpServletRequest request = ServletActionContext.getRequest();
-			start = (String) request.getAttribute("start");
-			limit = (String) request.getAttribute("limit");
+			start = tp.getStart();
+			limit = tp.getLimit();
 			ToolService toolService = (ToolService) ContextHolder
 					.getBean("toolService");
 			if (start != null && !start.equals("") && limit != null
@@ -57,6 +67,7 @@ public class ToolAction extends ActionSupport {
 				Tool t = tools.get(i);
 				pt.setToolId(t.getTId());
 				pt.setToolName(t.getTName());
+				pt.setToolPlatform(t.getTPlatform());
 				pt.setDescription(t.getTDescription());
 				list.add(pt);
 			}
@@ -69,14 +80,19 @@ public class ToolAction extends ActionSupport {
 	}
 
 	public void downloadToolWithToolId() {
-		HttpServletRequest request = ServletActionContext.getRequest();
 		HttpServletResponse response = ServletActionContext.getResponse();
-		String toolId = (String) request.getAttribute("toolId");
+		String toolId = tp.getToolId();
 		ToolService toolService = (ToolService) ContextHolder
 				.getBean("toolService");
 		OutputStream outputStream = null;
 		try {
-			byte[] b = toolService.getToolByToolId(toolId);
+			Toolversion tv = toolService.getToolVersionByToolId(toolId);
+			Tool tool = toolService.getToolByToolId(toolId);
+			String fileName = tool.getTName() + "." + tv.getTvFormat();
+			byte[] b = toolService.getToolContentByToolId(toolId);
+			response.setContentType("application/" + tv.getTvFormat());
+			response.setHeader("Content-Disposition", "attachment;filename="
+					+ new String(fileName.getBytes("gb2312"), "ISO8859-1"));
 			outputStream = response.getOutputStream();
 			outputStream.write(b);
 			outputStream.flush();
@@ -92,14 +108,19 @@ public class ToolAction extends ActionSupport {
 	}
 
 	public void downloadToolWithTvId() {
-		HttpServletRequest request = ServletActionContext.getRequest();
 		HttpServletResponse response = ServletActionContext.getResponse();
-		String tvId = (String) request.getAttribute("tvId");
+		String tvId = tp.getTvId();
 		ToolService toolService = (ToolService) ContextHolder
 				.getBean("toolService");
 		OutputStream outputStream = null;
 		try {
-			byte[] b = toolService.getToolByTvId(tvId);
+			Toolversion tv = toolService.getToolVersionByTvId(tvId);
+			Tool tool = toolService.getToolByTvId(tvId);
+			String fileName = tool.getTName() + "." + tv.getTvFormat();
+			byte[] b = toolService.getToolContentByTvId(tvId);
+			response.setContentType("application/" + tv.getTvFormat());
+			response.setHeader("Content-Disposition", "attachment;filename="
+					+ new String(fileName.getBytes("gb2312"), "ISO8859-1"));
 			outputStream = response.getOutputStream();
 			outputStream.write(b);
 			outputStream.flush();
@@ -115,33 +136,32 @@ public class ToolAction extends ActionSupport {
 	}
 
 	public String uploadTool() {
-		String result = "success";
 		InputStream is = null;
-		HttpServletRequest request = ServletActionContext.getRequest();
-		HttpServletResponse response = ServletActionContext.getResponse();
 		try {
 			is = new FileInputStream(file1);
 			byte[] buf = new byte[is.available()];
 			is.read(buf);
 			Tool tool = new Tool();
-			String toolName = (String) request.getAttribute("toolName");
+			String toolName = tp.getToolName();
 			if (toolName != null && !toolName.equals("")) {
 				tool.setTName(toolName);
 			} else {
 				tool.setTName(file1FileName);
 			}
-			String description = (String) request.getAttribute("description");
+			Short platform = tp.getPlatfrom();
+			tool.setTPlatform(platform);
+			String description = tp.getDescription();
 			tool.setTDescription(description);
+			Short state = 1;
+			tool.setTState(state);
 			ToolService toolService = (ToolService) ContextHolder
 					.getBean("toolService");
-			int tvId = toolService.saveTool(buf, file1FileName,
-					file1ContentType, tool);
-			HashMap<String, Object> datamap = new HashMap<String, Object>();
-			datamap.put("tvId", tvId);
-			postResult(response, datamap);
+			toolService.saveTool(buf, getName(file1FileName),
+					getExtension(file1FileName), tool);
+			return "success";
 		} catch (Exception e) {
 			e.printStackTrace();
-			result = "error";
+			return "error";
 		} finally {
 			try {
 				is.close();
@@ -149,7 +169,57 @@ public class ToolAction extends ActionSupport {
 				e.printStackTrace();
 			}
 		}
-		return result;
+	}
+
+	public String deleteTool() {
+		boolean result = false;
+		String toolId = tp.getToolId();
+		ToolService toolService = (ToolService) ContextHolder
+				.getBean("toolService");
+		result = toolService.deleteToolByToolId(toolId);
+		return result ? "success" : "error";
+	}
+	
+	public void runTool() {
+		HttpServletRequest request = ServletActionContext.getRequest();
+		HttpServletResponse response = ServletActionContext.getResponse();
+		String contextPath = request.getSession().getServletContext().getContextPath();
+		String realPath = request.getSession().getServletContext().getRealPath("/");
+		String toolId = tp.getToolId();
+		ToolService toolService = (ToolService) ContextHolder
+				.getBean("toolService");
+		String result = toolService.runTool(toolId, contextPath, realPath);
+		String jarPath = "jarList/" + toolId + ".jar";
+		try {
+			request.setAttribute("resourceUrl", contextPath + result);
+			request.setAttribute("fyToolUrl", contextPath + "/tool/actRunTool.action?tp=" + jarPath);//fyToolUrl = actRunTool?tp=1664332/1703596/151/0/1/zhuangweihao//0/1664318/project_teaching/1';//提交表单请求url
+			request.setAttribute("fyForwardUrl", contextPath + "/tool/runTool4ward.action?tp=" + result);//fyForwardUrl = 'runTool4ward?tp=1664332/1703596/151/0/1/zhuangweihao//0/1664318/project_teaching/1';//跳转的url
+			request.setAttribute("userAccount", "");//userAccount = 'zhuangweihao';//当前用户
+			request.getRequestDispatcher(result + "/pages/main.jsp").forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void actRunTool(){
+		HttpServletRequest request = ServletActionContext.getRequest();
+		HttpServletResponse response = ServletActionContext.getResponse();
+		String toolParams = tp.getTp();
+		ToolService toolService = (ToolService) ContextHolder
+				.getBean("toolService");
+		toolService.dispatchActRunTool(request, response, toolParams);
+	}
+
+	private String getName(String fileName) {
+		int position = fileName.lastIndexOf(".");
+		String name = fileName.substring(0, position);
+		return name;
+	}
+
+	private String getExtension(String fileName) {
+		int position = fileName.lastIndexOf(".");
+		String extension = fileName.substring(position + 1);
+		return extension;
 	}
 
 	public File getFile1() {
@@ -190,5 +260,4 @@ public class ToolAction extends ActionSupport {
 			pw.close();
 		}
 	}
-
 }

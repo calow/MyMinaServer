@@ -13,4 +13,6 @@ public interface ToolDao {
 	public int saveToolMessage(Tool tool);
 	
 	public Tool getToolByToolId(int toolId);
+	
+	public void updateToolMessage(Tool tool);
 }

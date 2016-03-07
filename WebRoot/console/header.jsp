@@ -34,7 +34,7 @@
      });
  
   });
-   
+  
  
 		  
 </script>
@@ -49,8 +49,9 @@
 			</div>
 
 			<div class="btn-group" style="float: right; margin-top: 50px;">
+				<a href="<%=basePath%>/tool/tool_list.action" type="button" class="btn btn-danger">工具开发平台</a>
 				<a type="button" class="btn btn-primary"
-					onclick="doShowDialog('aboutDialog')">关于</a>
+					onclick="doShowDialog('aboutDialog')">关于CIM</a>
 			</div>
 		</div>
 
@@ -64,7 +65,7 @@
 <div class="panel panel-primary gdialog" id="aboutDialog"
 	style="display: none; width: 400px; position: absolute;">
 	<div class="panel-heading">
-		关于
+		关于CIM
 		<a class="close" onclick="doHideDialog('aboutDialog')">&times;</a>
 	</div>
 	<div class="panel-body" style="padding: 0px;">
@@ -76,10 +77,10 @@
 				CIM即时通讯后台管理系统
 			</li>
 			<li class="list-group-item">
-				Email:3979434@qq.com
+				Email:725517818@qq.com
 			</li>
 			<li class="list-group-item">
-				QQ:3979434
+				QQ:725517818
 			</li>
 		</ul>
 	</div>

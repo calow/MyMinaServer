@@ -15,10 +15,12 @@ public class ToolDaoImpl extends HibernateDaoSupport implements ToolDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Tool> getToolList() {
-		String hql = "From Tool t order by t.TId DESC";
+		String hql = "From Tool t Where t.TState=:state order by t.TId DESC";
 		List<Tool> list = new ArrayList<Tool>();
 		Session session = this.getSession();
 		Query query = session.createQuery(hql);
+		Short state = 1;
+		query.setParameter("state", state);
 		list = query.list();
 		return list;
 	}
@@ -26,10 +28,11 @@ public class ToolDaoImpl extends HibernateDaoSupport implements ToolDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Tool> getToolListByLimit(int start, int count) {
-		String hql = "From Tool t order by t.TId DESC";
+		String hql = "From Tool t Where t.TState=:state order by t.TId DESC";
 		List<Tool> list = new ArrayList<Tool>();
 		Session session = this.getSession();
 		Query query = session.createQuery(hql);
+		query.setParameter("state", 1);
 		query.setFirstResult(start);
 		query.setMaxResults(count);
 		list = query.list();
@@ -46,6 +49,12 @@ public class ToolDaoImpl extends HibernateDaoSupport implements ToolDao {
 	public Tool getToolByToolId(int toolId) {
 		Session session = this.getSession();
 		return (Tool) session.get(Tool.class, toolId);
+	}
+	
+	@Override
+	public void updateToolMessage(Tool tool){
+		Session session = this.getSession();
+		session.update(tool);
 	}
 
 }

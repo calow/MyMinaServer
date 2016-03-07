@@ -164,14 +164,10 @@ function prepareShowDialog(dialog)
 
 
 function doShowDialog(dialogId,animate){
-     
-     
      var dialog = $('#'+dialogId);
      prepareShowDialog(dialog);
      if(animate==undefined)
      {
-        /*$('#'+dialogId).fadeIn();
-        return;*/
         animate  ='slide_in_left';
      }
      

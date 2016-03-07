@@ -11,6 +11,7 @@ public class PreTool implements Serializable {
 
 	private int toolId;
 	private String toolName;
+	private Short toolPlatform;
 	private String description;
 
 	public int getToolId() {
@@ -28,6 +29,14 @@ public class PreTool implements Serializable {
 	public void setToolName(String toolName) {
 		this.toolName = toolName;
 	}
+	
+	public Short getToolPlatform() {
+		return toolPlatform;
+	}
+
+	public void setToolPlatform(Short toolPlatform) {
+		this.toolPlatform = toolPlatform;
+	}
 
 	public String getDescription() {
 		return description;
@@ -36,5 +45,4 @@ public class PreTool implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 }

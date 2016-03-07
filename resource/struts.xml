@@ -24,9 +24,9 @@
 				<param name="excludeMethods">login</param>
 			</interceptor>
 			
-			<interceptor-stack name="myInterceptorStack">  
-                <interceptor-ref name="myInterceptor"/>  
-                <interceptor-ref name="defaultStack"/>  
+			<interceptor-stack name="myInterceptorStack">
+                <interceptor-ref name="myInterceptor"/>
+                <interceptor-ref name="defaultStack"/>
             </interceptor-stack>
 		</interceptors>
 		
@@ -43,8 +43,8 @@
 	<package name="tool" extends="struts-default" namespace="/tool">
 		<action name="tool_list" class="com.calow.ichat.admin.action.ToolAction"
 			method="getToolList">
-			<result name="success" type="dispatcher">/console/tool/manage.jsp</result>
-			<result name="error" type="dispatcher">/console/tool/error.jsp</result>
+			<result name="success" type="dispatcher">/console/tool/tool_manage.jsp</result>
+			<result name="error" type="dispatcher">/console/tool/tool_error.jsp</result>
 		</action>
 		
 		<action name="tool_download_tooId" class="com.calow.ichat.admin.action.ToolAction"
@@ -57,6 +57,22 @@
 		
 		<action name="tool_upload" class="com.calow.ichat.admin.action.ToolAction"
 			method="uploadTool">
+			<result name="success" type="redirectAction">/tool/tool_list.action</result>
+			<result name="error" type="dispatcher">/console/tool/tool_error.jsp</result>
+		</action>
+		
+		<action name="tool_delete" class="com.calow.ichat.admin.action.ToolAction"
+			method="deleteTool">
+			<result name="success" type="redirectAction">/tool/tool_list.action</result>
+			<result name="error" type="dispatcher">/console/tool/tool_error.jsp</result>
+		</action>
+		
+		<action name="tool_run" class="com.calow.ichat.admin.action.ToolAction"
+			method="runTool">
+		</action>
+		
+		<action name="actRunTool" class="com.calow.ichat.admin.action.ToolAction"
+			method="actRunTool">
 		</action>
 		
 	</package>

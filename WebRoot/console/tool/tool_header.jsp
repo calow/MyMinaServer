@@ -7,36 +7,44 @@
 	Object admin = session.getAttribute("admin");
 %>
 <script type="text/javascript">
-  function showUserMenu()
-  {
-      if($('#_main_face_menu').is(":hidden"))
-      {
-         $('#_main_face_menu').fadeIn();
-        $('.user-avatar').addClass('user-avatar-hover');
-      }else
-      {
-         $('#_main_face_menu').hide();
-         $('.user-avatar').removeClass('user-avatar-hover');
-      }
-      
-  }
   
+	function showUserMenu()
+	{
+		if($('#_main_face_menu').is(":hidden"))
+		{
+			$('#_main_face_menu').fadeIn();
+	        $('.user-avatar').addClass('user-avatar-hover');}
+		else
+		{
+			$('#_main_face_menu').hide();
+			$('.user-avatar').removeClass('user-avatar-hover');
+		}
+	}
+	$(function(){
+		$(".user-avatar").mouseenter(function(){
+		    $(".user-avatar").addClass('user-avatar-hover');
+		    $('#_main_face_menu').fadeIn();
+	    });
+		$("#_main_face_menu").mouseleave(function(){
+			$(".user-avatar").removeClass('user-avatar-hover');
+			$('#_main_face_menu').fadeOut();
+		});
+	});
   
-  $(function(){
-     $(".user-avatar").mouseenter(function(){
-       $(".user-avatar").addClass('user-avatar-hover');
-       $('#_main_face_menu').fadeIn();
-     });
-     
-     $("#_main_face_menu").mouseleave(function(){
-       $(".user-avatar").removeClass('user-avatar-hover');
-       $('#_main_face_menu').fadeOut();
-     });
- 
-  });
-   
- 
-		  
+	function doUpload(){
+		var toolName = $('#toolName').val();
+		var file = $('#file1').val();
+		if(toolName == ""){
+			alert("工具名称不能为空");
+			return;
+		}
+		if(file == ""){
+			alert("请选择文件");
+			return;
+		}
+		var form = document.getElementById("uploadForm");
+		form.submit();
+	}
 </script>
 
 
@@ -57,7 +65,6 @@
 	</div>
 
 	<!--web的导航在左侧-->
-
 </div>
 
 
@@ -69,7 +76,7 @@
 	</div>
 	<div class="panel-body" style="padding: 0px;">
 	    <div style="text-align: center;background: #5FA0D3;height: 150px;">
-									<img src="<%=headerBasePath%>/resource/img/icon.png" style="margin-top: 35px;height: 80px;height: 80px;"/>
+			<img src="<%=headerBasePath%>/resource/img/icon.png" style="margin-top: 35px;height: 80px;height: 80px;"/>
 		</div>
 		<ul class="list-group">
 			<li class="list-group-item">
@@ -79,41 +86,63 @@
 				Email:725517818@qq.com
 			</li>
 			<li class="list-group-item">
-				QQ:3979434
+				QQ:725517818
 			</li>
 		</ul>
 	</div>
 </div>
-<div class="panel panel-primary gdialog" id="LoginDialog"
-	style="display: none; width: 300px; position: absolute; height: 395px;">
+<div class="panel panel-primary gdialog" id="UploadDialog"
+	style="display: none; width: 500px; position: absolute; height: 550px;">
 	<div class="panel-heading">
-		系统管理员登录
-		<a class="close" onclick="doHideDialog('LoginDialog')">&times;</a>
+		上传工具
+		<a class="close" onclick="doHideDialog('UploadDialog')">&times;</a>
 	</div>
 	<div style="text-align: center; background: #5FA0D3; height: 100px;">
 	</div>
-	<div class="panel-body">
-
-
-		<div class="form-group" style="margin-top: 20px;">
-			<label style="width: 50px;">
-				<font color="red">*</font>账号:
-			</label>
-			<input type="text" class="form-control" id="account" maxlength="15"
-				style="display: inline; width: 200px; height: 50px;" />
+	<form id="uploadForm" enctype="multipart/form-data" method="post" action="<%=headerBasePath%>/tool/tool_upload.action">
+		<div class="panel-body">
+				<div class="form-group" style="margin-top: 20px;">
+					<label style="width: 50px;">
+						<font color="red">*</font>名称:
+					</label>
+					<input type="text" id="toolName" name="toolName" class="form-control" maxlength="15"
+						style="display: inline; width: 400px; height: 50px;"/>
+				</div>
+				<div class="form-group" style="margin-top: 20px;">
+					<label style="width: 50px;">
+						<font color="red">*</font>平台:
+					</label>
+					<select id="platfrom" name="platfrom" class="form-control" maxlength="32" style="display: inline; width: 400px; height: 50px;">
+						<option value="0">PC</option>
+						<option value="1">终端</option>
+						<option value="2">移动</option> 
+					</select>
+				</div>
+				<div class="form-group" style="margin-top: 20px;">
+					<label style="width: 50px;">
+						<font color="red">*</font>描述:
+					</label>
+					<input type="text" id="description" name="description" class="form-control" 
+						maxlength="32" style="display: inline; width: 400px; height: 50px;" />
+				</div>
+				<div class="form-group" style="margin-top: 20px;">
+					<label style="width: 50px;">
+						<font color="red">*</font>文件:
+					</label>
+					<input type="file" id="file1" name="file1" class="form-control" 
+						maxlength="32" style="display: inline; width: 400px; height: 50px;" />
+				</div>
 		</div>
-		<div class="form-group" style="margin-top: 20px;">
-			<label style="width: 50px;">
-				<font color="red">*</font>密码:
-			</label>
-			<input type="password" class="form-control" id="password"
-				maxlength="32" style="display: inline; width: 200px; height: 50px;" />
+		<div class="panel-footer" style="text-align: center;">
+			<a type="button" class="btn btn-success btn-lg"
+				style="width: 400px;" onclick="doUpload()"> 上传</a>
 		</div>
-	</div>
-	<div class="panel-footer" style="text-align: center;">
-		<a type="button" class="btn btn-success btn-lg" onclick="doLogin()"
-			style="width: 200px;"> 登录</a>
-	</div>
+		
+		<div class="progress">
+			<div class="bar"></div>
+    		<div class="percent">0%</div>
+		</div>
+	</form>
 </div>
 
 <div id="global_mask"

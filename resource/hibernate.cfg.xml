@@ -58,6 +58,8 @@
 	<mapping class="com.calow.ichat.entity.Storage" />
 	<mapping class="com.calow.ichat.entity.User" />
 	<mapping class="com.calow.ichat.entity.Userstate" />
+	<mapping class="com.calow.ichat.entity.Tool" />
+	<mapping class="com.calow.ichat.entity.Toolversion" />
 
 </session-factory>
 </hibernate-configuration>

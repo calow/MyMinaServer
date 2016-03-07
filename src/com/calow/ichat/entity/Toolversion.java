@@ -1,8 +1,11 @@
 package com.calow.ichat.entity;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -27,6 +30,7 @@ public class Toolversion implements java.io.Serializable {
 	private String tvDescription;
 	private Integer tvSize;
 	private String tvFormat;
+	private Short tvState;
 
 	// Constructors
 
@@ -36,27 +40,30 @@ public class Toolversion implements java.io.Serializable {
 
 	/** minimal constructor */
 	public Toolversion(Integer tvId, Tool tool, Storage storage,
-			Integer tvSize, String tvFormat) {
+			Integer tvSize, String tvFormat, Short tvState) {
 		this.tvId = tvId;
 		this.tool = tool;
 		this.storage = storage;
 		this.tvSize = tvSize;
 		this.tvFormat = tvFormat;
+		this.tvState = tvState;
 	}
 
 	/** full constructor */
 	public Toolversion(Integer tvId, Tool tool, Storage storage,
-			String tvDescription, Integer tvSize, String tvFormat) {
+			String tvDescription, Integer tvSize, String tvFormat, Short tvState) {
 		this.tvId = tvId;
 		this.tool = tool;
 		this.storage = storage;
 		this.tvDescription = tvDescription;
 		this.tvSize = tvSize;
 		this.tvFormat = tvFormat;
+		this.tvState = tvState;
 	}
 
 	// Property accessors
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "TV_ID", unique = true, nullable = false)
 	public Integer getTvId() {
 		return this.tvId;
@@ -111,6 +118,15 @@ public class Toolversion implements java.io.Serializable {
 
 	public void setTvFormat(String tvFormat) {
 		this.tvFormat = tvFormat;
+	}
+	
+	@Column(name = "TV_State", nullable = false)
+	public Short getTvState() {
+		return this.tvState;
+	}
+
+	public void setTvState(Short tvState) {
+		this.tvState = tvState;
 	}
 
 }
