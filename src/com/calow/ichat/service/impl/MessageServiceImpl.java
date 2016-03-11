@@ -9,7 +9,6 @@ import net.sf.json.JSONArray;
 
 import com.calow.cim.nio.session.CIMSession;
 import com.calow.cim.nio.session.DefaultSessionManager;
-import com.calow.ichat.cim.push.DefaultMessagePusher;
 import com.calow.ichat.common.util.ContextHolder;
 import com.calow.ichat.dao.GroupDao;
 import com.calow.ichat.dao.MessageDao;
@@ -174,52 +173,47 @@ public class MessageServiceImpl implements MessageService {
 	 * @param messageId
 	 * @param account
 	 */
-	public void loadMessageToOthers(final int groupId, final int messageId,
-			final String account) {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				List<Messageset> list = getMessageSetListByMessageId(messageId);
-				if (list != null && list.size() > 0) {
-					for (Messageset messageSet : list) {
-						com.calow.cim.nio.mutual.Message msg = new com.calow.cim.nio.mutual.Message();
-						String loginId = messageSet.getUser().getULoginId();
-						if (!loginId.equals(account)) {
-							CIMSession session = ((DefaultSessionManager) ContextHolder
-									.getBean("defaultSessionManager"))
-									.getSession(loginId);
-							if (session != null) {
-								msg.setGroupId(String.valueOf(messageSet
-										.getMessage().getGroup().getGId()));
-								msg.setGroupName(messageSet.getMessage()
-										.getGroup().getGName());
-								msg.setSender(messageSet.getMessage().getUser()
-										.getULoginId());
-								msg.setSenderName(messageSet.getMessage()
-										.getUser().getUNickName());
-								msg.setReceiver(messageSet.getUser()
-										.getULoginId());
-								msg.setType(String.valueOf(messageSet
-										.getMessage().getMessagetype()));
-								msg.setContent(messageSet.getMessage()
-										.getMContent());
-								if(messageSet
-										.getMessage().getResource() != null){
-									msg.setFile(String.valueOf(messageSet
-											.getMessage().getResource().getRId()));
-								}
-								msg.setTimestamp(messageSet
-										.getMessage().getMCreateTime().getTime());
-								msg.setMid(String.valueOf(messageId));
-								msg.setMessageSetId(String.valueOf(messageSet
-										.getMsId()));
-								session.write(msg);
-							}
+	public void loadMessageToOthers(int groupId, int messageId,
+			String account) {
+		List<Messageset> list = getMessageSetListByMessageId(messageId);
+		if (list != null && list.size() > 0) {
+			for (Messageset messageSet : list) {
+				com.calow.cim.nio.mutual.Message msg = new com.calow.cim.nio.mutual.Message();
+				String loginId = messageSet.getUser().getULoginId();
+				if (!loginId.equals(account)) {
+					CIMSession session = ((DefaultSessionManager) ContextHolder
+							.getBean("defaultSessionManager"))
+							.getSession(loginId);
+					if (session != null) {
+						msg.setGroupId(String.valueOf(messageSet
+								.getMessage().getGroup().getGId()));
+						msg.setGroupName(messageSet.getMessage()
+								.getGroup().getGName());
+						msg.setSender(messageSet.getMessage().getUser()
+								.getULoginId());
+						msg.setSenderName(messageSet.getMessage()
+								.getUser().getUNickName());
+						msg.setReceiver(messageSet.getUser()
+								.getULoginId());
+						msg.setType(String.valueOf(messageSet
+								.getMessage().getMessagetype().getMtValue()));
+						msg.setContent(messageSet.getMessage()
+								.getMContent());
+						if(messageSet
+								.getMessage().getResource() != null){
+							msg.setFile(String.valueOf(messageSet
+									.getMessage().getResource().getRId()));
 						}
+						msg.setTimestamp(messageSet
+								.getMessage().getMCreateTime().getTime());
+						msg.setMid(String.valueOf(messageId));
+						msg.setMessageSetId(String.valueOf(messageSet
+								.getMsId()));
+						session.write(msg);
 					}
 				}
 			}
-		}).start();
+		}
+	
 	}
 }

@@ -1,6 +1,9 @@
 package com.calow.ichat.dao;
 
+import java.sql.Connection;
 import java.util.List;
+
+import net.sf.json.JSONArray;
 
 import com.calow.ichat.entity.Tool;
 
@@ -15,4 +18,10 @@ public interface ToolDao {
 	public Tool getToolByToolId(int toolId);
 	
 	public void updateToolMessage(Tool tool);
+	
+	public JSONArray getPCToolMessageAndTvIdList();
+	
+	public JSONArray getPhoneToolMessageAndTvIdList();
+	
+	public Connection getSqlConnection();
 }

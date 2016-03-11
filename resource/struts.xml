@@ -47,6 +47,14 @@
 			<result name="error" type="dispatcher">/console/tool/tool_error.jsp</result>
 		</action>
 		
+		<action name="tool_pc_list" class="com.calow.ichat.admin.action.ToolAction"
+			method="getPcToolList">
+		</action>
+		
+		<action name="tool_phone_list" class="com.calow.ichat.admin.action.ToolAction"
+			method="getPhoneToolList">
+		</action>
+		
 		<action name="tool_download_tooId" class="com.calow.ichat.admin.action.ToolAction"
 			method="downloadToolWithToolId">
 		</action>

@@ -13,6 +13,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
+
 import org.apache.struts2.ServletActionContext;
 
 import com.calow.cim.nio.mutual.PreTool;
@@ -78,6 +80,26 @@ public class ToolAction extends ActionSupport implements
 		}
 		return result;
 	}
+	
+	public void getPcToolList(){
+		HttpServletResponse response = ServletActionContext.getResponse();
+		ToolService toolService = (ToolService) ContextHolder
+				.getBean("toolService");
+		JSONArray result = toolService.getPCToolMessageAndTvIdList();
+		HashMap<String, Object> datamap = new HashMap<String, Object>();
+		datamap.put("data", result);
+		postResult(response, datamap);
+	}
+	
+	public void getPhoneToolList(){
+		HttpServletResponse response = ServletActionContext.getResponse();
+		ToolService toolService = (ToolService) ContextHolder
+				.getBean("toolService");
+		JSONArray result = toolService.getPhoneToolMessageAndTvIdList();
+		HashMap<String, Object> datamap = new HashMap<String, Object>();
+		datamap.put("data", result);
+		postResult(response, datamap);
+	}
 
 	public void downloadToolWithToolId() {
 		HttpServletResponse response = ServletActionContext.getResponse();
@@ -115,8 +137,8 @@ public class ToolAction extends ActionSupport implements
 		OutputStream outputStream = null;
 		try {
 			Toolversion tv = toolService.getToolVersionByTvId(tvId);
-			Tool tool = toolService.getToolByTvId(tvId);
-			String fileName = tool.getTName() + "." + tv.getTvFormat();
+			String toolName = toolService.getToolNameByTvId(tvId);
+			String fileName = toolName + "." + tv.getTvFormat();
 			byte[] b = toolService.getToolContentByTvId(tvId);
 			response.setContentType("application/" + tv.getTvFormat());
 			response.setHeader("Content-Disposition", "attachment;filename="
@@ -207,7 +229,7 @@ public class ToolAction extends ActionSupport implements
 		String toolParams = tp.getTp();
 		ToolService toolService = (ToolService) ContextHolder
 				.getBean("toolService");
-		toolService.dispatchActRunTool(request, response, toolParams);
+		toolService.initActRunTool(request, response, toolParams);
 	}
 
 	private String getName(String fileName) {
@@ -250,6 +272,8 @@ public class ToolAction extends ActionSupport implements
 			HashMap<String, Object> datamap) {
 		PrintWriter pw = null;
 		try {
+			response.setCharacterEncoding("GBK");
+            response.setContentType("text/html;charset=GBK;");
 			pw = response.getWriter();
 			pw.write(new Gson().toJson(datamap));
 			pw.flush();

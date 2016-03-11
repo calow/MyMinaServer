@@ -65,15 +65,15 @@
 	<bean id="messageSetDao" class="com.calow.ichat.dao.impl.MessageSetDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
 	</bean>
-	
+
 	<bean id="storageDao" class="com.calow.ichat.dao.impl.StorageDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
 	</bean>
-	
+
 	<bean id="toolDao" class="com.calow.ichat.dao.impl.ToolDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
 	</bean>
-	
+
 	<bean id="toolVersionDao" class="com.calow.ichat.dao.impl.ToolVersionDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
 	</bean>
@@ -115,7 +115,7 @@
 			<tx:method name="*" propagation="REQUIRED" />
 		</tx:attributes>
 	</tx:advice>
-	
+
 	<aop:config>
 		<aop:pointcut id="transactionPointcut"
 			expression="execution(* com.calow.ichat.service..*Impl.*(..))" />

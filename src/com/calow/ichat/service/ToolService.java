@@ -1,9 +1,12 @@
 package com.calow.ichat.service;
 
+import java.sql.Connection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONArray;
 
 import com.calow.ichat.entity.Tool;
 import com.calow.ichat.entity.Toolversion;
@@ -24,7 +27,7 @@ public interface ToolService {
 	
 	public Toolversion getToolVersionByTvId(String tvId);
 	
-	public Tool getToolByTvId(String tvId);
+	public String getToolNameByTvId(String tvId);
 	
 	public int saveTool(byte[] content, String fileName, String contentType, Tool tool);
 	
@@ -34,5 +37,11 @@ public interface ToolService {
 	
 	public String runTool(String toolId, String contextPath, String realPath);
 	
-	public void dispatchActRunTool(HttpServletRequest request, HttpServletResponse response, String toolParams);
+	public void initActRunTool(HttpServletRequest request, HttpServletResponse response, String toolParams);
+	
+	public JSONArray getPCToolMessageAndTvIdList();
+	
+	public JSONArray getPhoneToolMessageAndTvIdList();
+	
+	public Connection getToolConnection();
 }

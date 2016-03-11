@@ -153,7 +153,7 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 				+ "AND m.M_groupID = ?";
 		String sql2 = "SELECT m.M_ID, ms.MS_ID, u2.U_LoginID, u2.U_NickName, u1.U_LoginID, "
 				+ "m.M_Type, m.M_Content, m.M_ResourceID, m.M_CreateTime, m.M_groupID, "
-				+ "g.G_Name, ms.MS_State FROM messageset ms "
+				+ "g.G_Name, ms.MS_State, g.G_JSon FROM messageset ms "
 				+ "INNER JOIN message m ON m.M_ID = ms.MS_MessageID "
 				+ "INNER JOIN `user` u1 ON u1.U_ID = ms.MS_ToUser "
 				+ "INNER JOIN `user` u2 ON u2.U_ID = m.M_UserID "
@@ -195,6 +195,7 @@ public class MessageDaoImpl extends HibernateDaoSupport implements MessageDao {
 			object2.put("groupId", o[9]);
 			object2.put("groupName", o[10]);
 			object2.put("statu", o[11]);
+			object2.put("json", o[12]);
 			array.add(object2);
 		}
 		jsonObject.put("rows", array);

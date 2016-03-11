@@ -1,20 +1,20 @@
 package com.calow.ichat.service.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.sql.Connection;
 import java.util.List;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-import javax.faces.application.Application;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONArray;
 
 import org.dom4j.io.SAXReader;
 
@@ -45,7 +45,10 @@ public class ToolServiceImpl implements ToolService {
 
 	@Override
 	public byte[] getToolContentByToolId(String toolId) {
-		Toolversion version = this.getToolVersionByToolId(toolId);
+		ToolVersionDao toolVersionDao = (ToolVersionDao) ContextHolder
+				.getBean("toolVersionDao");
+		Toolversion version = toolVersionDao.getToolVersionByToolId(Integer
+				.valueOf(toolId));
 		Storage storage = version.getStorage();
 		return storage.getSContent();
 	}
@@ -64,12 +67,13 @@ public class ToolServiceImpl implements ToolService {
 		ToolDao toolDao = (ToolDao) ContextHolder.getBean("toolDao");
 		Tool tool = toolDao.getToolByToolId(Integer.valueOf(toolId));
 		return tool;
-
 	}
 
 	@Override
 	public byte[] getToolContentByTvId(String tvId) {
-		Toolversion tv = this.getToolVersionByTvId(tvId);
+		ToolVersionDao toolVersionDao = (ToolVersionDao) ContextHolder
+				.getBean("toolVersionDao");
+		Toolversion tv = toolVersionDao.getToolVersionByTvId(Integer.valueOf(tvId));
 		Storage storage = tv.getStorage();
 		return storage.getSContent();
 	}
@@ -82,10 +86,11 @@ public class ToolServiceImpl implements ToolService {
 	}
 
 	@Override
-	public Tool getToolByTvId(String tvId) {
-		Toolversion tv = this.getToolVersionByTvId(tvId);
-		return tv.getTool();
-
+	public String getToolNameByTvId(String tvId) {
+		ToolVersionDao toolVersionDao = (ToolVersionDao) ContextHolder
+				.getBean("toolVersionDao");
+		Toolversion tv =  toolVersionDao.getToolVersionByTvId(Integer.valueOf(tvId));
+		return tv.getTool().getTName();
 	}
 
 	@Override
@@ -190,7 +195,7 @@ public class ToolServiceImpl implements ToolService {
 	}
 
 	@Override
-	public void dispatchActRunTool(HttpServletRequest request,
+	public void initActRunTool(HttpServletRequest request,
 			HttpServletResponse response, String toolParams) {
 		String realPath = request.getSession().getServletContext().getRealPath("/");
 		String clazzName = SAX(realPath + toolParams, "EntryClass");
@@ -200,6 +205,8 @@ public class ToolServiceImpl implements ToolService {
 			        .getContextClassLoader());
 			Class<?> myClass = myClassLoader.loadClass(clazzName);
 			com.calow.cim.nio.mutual.Tool tool = (com.calow.cim.nio.mutual.Tool) myClass.newInstance();
+			Connection connection = this.getToolConnection();
+			tool.setConnection(connection);
 			tool.act(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -220,5 +227,23 @@ public class ToolServiceImpl implements ToolService {
 			e1.printStackTrace();
 		}
 		return value;
+	}
+
+	@Override
+	public JSONArray getPCToolMessageAndTvIdList() {
+		ToolDao toolDao = (ToolDao) ContextHolder.getBean("toolDao");
+		return toolDao.getPCToolMessageAndTvIdList();
+	}
+
+	@Override
+	public JSONArray getPhoneToolMessageAndTvIdList() {
+		ToolDao toolDao = (ToolDao) ContextHolder.getBean("toolDao");
+		return toolDao.getPhoneToolMessageAndTvIdList();
+	}
+
+	@Override
+	public Connection getToolConnection() {
+		ToolDao toolDao = (ToolDao) ContextHolder.getBean("toolDao");
+		return toolDao.getSqlConnection();
 	}
 }
