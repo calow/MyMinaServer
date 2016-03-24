@@ -158,13 +158,11 @@ public class ToolServiceImpl implements ToolService {
 				.getBean("toolVersionDao");
 		Toolversion tv = null;
 		FileOutputStream outputStream = null;
-		String toolPath = realPath + "jarList/";
-		String toolName = realPath + "jarList/" + toolId + ".jar";
-		String releasePath = realPath + "releaseList/" + toolId;
+		String toolPath = realPath + "releaseList/" + toolId;
+		String toolName = realPath + "releaseList/" + toolId + "/" + toolId + ".jar";
 		String returnPath = "/releaseList/" + toolId;
-		File tool = new File(toolName);
 		File filePath = new File(toolPath);
-		File release = new File(releasePath);
+		File tool = new File(toolName);
 		try {
 			if(!tool.exists()){
 				if(!filePath.exists()){
@@ -175,9 +173,7 @@ public class ToolServiceImpl implements ToolService {
 				byte[] b = tv.getStorage().getSContent();
 				outputStream = new FileOutputStream(tool);
 				outputStream.write(b);
-			}
-			if(!release.exists()){
-				JarUtils.unJar(tool, release);
+				JarUtils.unJar(tool, filePath);
 			}
 			result = returnPath;
 		} catch (Exception e) {

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -211,11 +212,10 @@ public class ToolAction extends ActionSupport implements
 		ToolService toolService = (ToolService) ContextHolder
 				.getBean("toolService");
 		String result = toolService.runTool(toolId, contextPath, realPath);
-		String jarPath = "jarList/" + toolId + ".jar";
 		try {
 			request.setAttribute("resourceUrl", contextPath + result);
-			request.setAttribute("fyToolUrl", contextPath + "/tool/actRunTool.action?tp=" + jarPath);//fyToolUrl = actRunTool?tp=1664332/1703596/151/0/1/zhuangweihao//0/1664318/project_teaching/1';//提交表单请求url
-			request.setAttribute("fyForwardUrl", contextPath + "/tool/runTool4ward.action?tp=" + result);//fyForwardUrl = 'runTool4ward?tp=1664332/1703596/151/0/1/zhuangweihao//0/1664318/project_teaching/1';//跳转的url
+			request.setAttribute("requestUrl", contextPath + "/tool/actRunTool.action?tp=" + result + "&toolId=" + toolId);//fyToolUrl = actRunTool?tp=1664332/1703596/151/0/1/zhuangweihao//0/1664318/project_teaching/1';//提交表单请求url
+			request.setAttribute("forwardUrl", contextPath + "/tool/runTool4ward.action?tp=" + result + "&toolId=" + toolId);//fyForwardUrl = 'runTool4ward?tp=1664332/1703596/151/0/1/zhuangweihao//0/1664318/project_teaching/1';//跳转的url
 			request.setAttribute("userAccount", "");//userAccount = 'zhuangweihao';//当前用户
 			request.getRequestDispatcher(result + "/pages/main.jsp").forward(request, response);
 		} catch (Exception e) {
@@ -227,9 +227,31 @@ public class ToolAction extends ActionSupport implements
 		HttpServletRequest request = ServletActionContext.getRequest();
 		HttpServletResponse response = ServletActionContext.getResponse();
 		String toolParams = tp.getTp();
+		String toolId = tp.getToolId();
+		System.out.println("toolAction = " + request.getParameter("toolAction"));
 		ToolService toolService = (ToolService) ContextHolder
 				.getBean("toolService");
-		toolService.initActRunTool(request, response, toolParams);
+		toolService.initActRunTool(request, response, toolParams + "/" + toolId + ".jar");
+	}
+	
+	public void runTool4ward(){
+		HttpServletRequest request = ServletActionContext.getRequest();
+		HttpServletResponse response = ServletActionContext.getResponse();
+		String contextPath = request.getSession().getServletContext().getContextPath();
+		String toolParams = tp.getTp();
+		String toolId = tp.getToolId();
+		String path = tp.getPath();
+		try {
+			request.setAttribute("resourceUrl", contextPath + toolParams);
+			request.setAttribute("requestUrl", contextPath + "/tool/actRunTool.action?tp=" + toolParams + "&toolId=" + toolId);
+			request.setAttribute("forwardUrl", contextPath + "/tool/runTool4ward.action?tp=" + toolParams + "&toolId=" + toolId);
+			request.setAttribute("userAccount", "");
+			request.getRequestDispatcher(toolParams + "/pages/" + path).forward(request, response);
+		} catch (ServletException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private String getName(String fileName) {

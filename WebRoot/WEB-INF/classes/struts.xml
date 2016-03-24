@@ -83,6 +83,10 @@
 			method="actRunTool">
 		</action>
 		
+		<action name="runTool4ward" class="com.calow.ichat.admin.action.ToolAction"
+			method="runTool4ward">
+		</action>
+		
 	</package>
 
 	<package name="cgi" extends="struts-default" namespace="/cgi">

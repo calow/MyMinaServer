@@ -16,6 +16,8 @@ public class ToolParams implements Serializable {
 	public Short platfrom;
 	public String description;
 	public String tp;
+	public String path;
+	
 	public String getStart() {
 		return start;
 	}
@@ -63,6 +65,12 @@ public class ToolParams implements Serializable {
 	}
 	public void setTp(String tp) {
 		this.tp = tp;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
 	}
 	
 	
