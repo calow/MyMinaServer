@@ -29,9 +29,10 @@ public class ClientMessageAction extends ActionSupport implements
 	public void sendMessage() {
 		HttpServletResponse response = ServletActionContext.getResponse();
 		HashMap<String, Object> datamap = new HashMap<String, Object>();
-		String account = (String) ServletActionContext.getRequest()
-				.getSession().getAttribute("user");
+//		String account = (String) ServletActionContext.getRequest()
+//				.getSession().getAttribute("user");
 		MessageService ms = (MessageService) ContextHolder.getBean("messageService");
+		String account = cm.getLoginId();
 		String gorupId = cm.getGroupId();
 		String content = cm.getContent();
 		String messageId = cm.getMessageId();

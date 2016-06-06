@@ -14,14 +14,17 @@ public class ClientMessage implements Serializable {
 	private String groupId;
 
 	private String messageId;
+	
+	private String loginId;
 
 	public ClientMessage() {
 	}
 
-	public ClientMessage(String content, String groupId, String messageId) {
+	public ClientMessage(String content, String groupId, String messageId, String loginId) {
 		this.content = content;
 		this.groupId = groupId;
 		this.messageId = messageId;
+		this.loginId = loginId;
 	}
 
 	public String getContent() {
@@ -50,6 +53,14 @@ public class ClientMessage implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
 	}
 
 }
