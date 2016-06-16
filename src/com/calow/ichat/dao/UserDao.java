@@ -11,4 +11,10 @@ public interface UserDao {
 	public String getGroupFriendsList(String account);
 	
 	public User getUserByUserAccount(String account);
+	
+	public int addUser(User user);
+	
+	public int getUserCount();
+	
+	public User getUserById(int userId);
 }

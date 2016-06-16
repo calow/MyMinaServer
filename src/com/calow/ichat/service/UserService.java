@@ -13,4 +13,7 @@ public interface UserService {
 	public String getGroupFriendsList(String account);
 
 	public User getUserByUserId(String userId);
+	
+	public Map<String, Object> saveRegisterInfo(User user,
+			HttpServletRequest request);
 }

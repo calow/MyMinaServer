@@ -77,6 +77,18 @@
 	<bean id="toolVersionDao" class="com.calow.ichat.dao.impl.ToolVersionDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
 	</bean>
+	
+	<bean id="resourceDao" class="com.calow.ichat.dao.impl.ResourceDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
+	</bean>
+	
+	<bean id="userstateDao" class="com.calow.ichat.dao.impl.UserStateDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
+	</bean>
+	
+	<bean id="friendgroupDao" class="com.calow.ichat.dao.impl.FriendGroupDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
+	</bean>
 
 	<!-- =============================================================== -->
 	<!-- 配置声明式事务 -->

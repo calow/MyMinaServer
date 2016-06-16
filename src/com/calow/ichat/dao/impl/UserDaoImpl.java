@@ -85,11 +85,9 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 	public String getGroupFriendsList(String account) {
 		Session session = null;
 		JSONArray jsonArray = null;
-		String groupList = "SELECT COUNT(*), fg.FG_Name, fg.FG_ID FROM friend f "
-				+ "INNER JOIN `user` u1 ON u1.U_ID = f.F_UserID "
-				+ "INNER JOIN `user` u2 ON u2.U_ID = f.F_FriendID "
-				+ "INNER JOIN friendgroup fg ON fg.FG_ID = f.F_FriendGroupID "
-				+ "WHERE u1.U_LoginID = ? GROUP BY f.F_FriendGroupID";
+		String groupList = "SELECT fg.FG_Name, fg.FG_ID FROM friendgroup fg "
+				+ "INNER JOIN `user` u1 ON u1.U_ID = fg.FG_UserID "
+				+ "WHERE u1.U_LoginID = ?";
 		String friendList = "From Friend f where f.friendgroup.fgId=:groupId order by f.userByFFriendId.userstate.usValue desc";
 		String groupId = "From Group g where g.GJson=:a2b or g.GJson=:b2a";
 		session = this.getSession();
@@ -102,16 +100,15 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 		List<Object[]> list1 = query1.list();
 		for (Object[] o : list1) {
 			jsonObject = new JSONObject();
-			jsonObject.put("count", o[0]);
-			jsonObject.put("groupName", o[1]);
-			jsonObject.put("groupId", o[2]);
+			jsonObject.put("groupName", o[0]);
+			jsonObject.put("groupId", o[1]);
 			jsonObject.put("owner", account);
 			// 查询每个分组的所有成员
 			Query query2 = session.createQuery(friendList);
-			query2.setParameter("groupId", o[2]);
+			query2.setParameter("groupId", o[1]);
 			List<Friend> list2 = query2.list();
+			array = new JSONArray();
 			if (list2.size() > 0 && list2 != null) {
-				array = new JSONArray();
 				for (Friend f : list2) {
 					object = new JSONObject();
 					object.put("friedID", f.getFId());
@@ -156,6 +153,34 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 		if (list.size() > 0 && list != null) {
 			result = list.get(0);
 		}
+		return result;
+	}
+
+	@Override
+	public int addUser(User user) {
+		int result = -1;
+		Session session = null;
+		session = this.getSession();
+		result = (Integer) session.save(user);
+		return result;
+	}
+
+	@Override
+	public int getUserCount() {
+		int result = -1;
+		Session session = null;
+		String sql = "SELECT COUNT(*) FROM `user`";
+		session = this.getSession();
+		SQLQuery query = session.createSQLQuery(sql);
+		result = ((Number) query.uniqueResult()).intValue();
+		return result;
+	}
+
+	@Override
+	public User getUserById(int userId) {
+		User result = null;
+		Session session = this.getSession();
+		result = (User) session.get(User.class, userId);
 		return result;
 	}
 

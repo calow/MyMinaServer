@@ -3,34 +3,34 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 <struts>
- 	<!-- 开发模式下使用,这样可以打印出更详细的错误信息 -->
+	<!-- 开发模式下使用,这样可以打印出更详细的错误信息 -->
 	<constant name="struts-devModel" value="true" />
-	<!-- 该属性指定需要Struts2处理的请求后缀，该属性的默认值是action，即所有匹配*.action的请求都由Struts2处理。
-                       如果用户需要指定多个请求后缀，则多个后缀之间以英文逗号（,）隔开。 -->
+	<!-- 该属性指定需要Struts2处理的请求后缀，该属性的默认值是action，即所有匹配*.action的请求都由Struts2处理。 如果用户需要指定多个请求后缀，则多个后缀之间以英文逗号（,）隔开。 -->
 	<constant name="struts.action.extension" value="action,do,api" />
 	<!-- 指定允许上传的文件最大字节数。默认值是2097152(2M) -->
 	<constant name="struts.multipart.maxSize" value="100000000" />
-	<!--解决乱码    -->
+	<!--解决乱码 -->
 	<constant name="struts.i18n.encoding" value="UTF-8"></constant>
 	<!-- 设置上传文件的临时文件夹,默认使用javax.servlet.context.tempdir -->
 	<constant name="struts.multipart.saveDir" value="/tmp" />
-	<!-- 该属性指定处理multipart/form-data的MIME类型（文件上传）请求的框架，该属性支持cos、pell和jakarta等属性值，
-	即分别对应使用cos的文件上传框架、pell上传及common-fileupload文件上传框架。该属性的默认值为jakarta -->
+	<!-- 该属性指定处理multipart/form-data的MIME类型（文件上传）请求的框架，该属性支持cos、pell和jakarta等属性值， 
+		即分别对应使用cos的文件上传框架、pell上传及common-fileupload文件上传框架。该属性的默认值为jakarta -->
 	<constant name="struts.multipart.parser" value="jakarta" />
 
 	<package name="struts2" extends="struts-default">
 		<interceptors>
-			<interceptor name="myInterceptor" class="com.calow.cim.nio.filter.MyInterceptor">
+			<interceptor name="myInterceptor"
+				class="com.calow.cim.nio.filter.MyInterceptor">
 				<param name="excludeMethods">login</param>
 			</interceptor>
-			
+
 			<interceptor-stack name="myInterceptorStack">
-                <interceptor-ref name="myInterceptor"/>
-                <interceptor-ref name="defaultStack"/>
-            </interceptor-stack>
+				<interceptor-ref name="myInterceptor" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
 		</interceptors>
-		
-		<default-interceptor-ref name="myInterceptorStack"/>
+
+		<default-interceptor-ref name="myInterceptorStack" />
 	</package>
 
 	<package name="admin" extends="struts-default" namespace="/admin">
@@ -39,73 +39,81 @@
 			<result name="list" type="dispatcher">/console/session/manage.jsp</result>
 		</action>
 	</package>
-	
+
 	<package name="tool" extends="struts-default" namespace="/tool">
 		<action name="tool_list" class="com.calow.ichat.admin.action.ToolAction"
 			method="getToolList">
-			<result name="success" type="dispatcher">/console/tool/tool_manage.jsp</result>
-			<result name="error" type="dispatcher">/console/tool/tool_error.jsp</result>
+			<result name="success" type="dispatcher">/console/tool/tool_manage.jsp
+			</result>
+			<result name="error" type="dispatcher">/console/tool/tool_error.jsp
+			</result>
 		</action>
-		
+
 		<action name="tool_pc_list" class="com.calow.ichat.admin.action.ToolAction"
 			method="getPcToolList">
 		</action>
-		
+
 		<action name="tool_phone_list" class="com.calow.ichat.admin.action.ToolAction"
 			method="getPhoneToolList">
 		</action>
-		
+
 		<action name="tool_download_tooId" class="com.calow.ichat.admin.action.ToolAction"
 			method="downloadToolWithToolId">
 		</action>
-		
+
 		<action name="tool_download_tvId" class="com.calow.ichat.admin.action.ToolAction"
 			method="downloadToolWithTvId">
 		</action>
-		
+
 		<action name="tool_upload" class="com.calow.ichat.admin.action.ToolAction"
 			method="uploadTool">
 			<result name="success" type="redirectAction">/tool/tool_list.action</result>
-			<result name="error" type="dispatcher">/console/tool/tool_error.jsp</result>
+			<result name="error" type="dispatcher">/console/tool/tool_error.jsp
+			</result>
 		</action>
-		
+
 		<action name="tool_delete" class="com.calow.ichat.admin.action.ToolAction"
 			method="deleteTool">
 			<result name="success" type="redirectAction">/tool/tool_list.action</result>
-			<result name="error" type="dispatcher">/console/tool/tool_error.jsp</result>
+			<result name="error" type="dispatcher">/console/tool/tool_error.jsp
+			</result>
 		</action>
-		
+
 		<action name="tool_run" class="com.calow.ichat.admin.action.ToolAction"
 			method="runTool">
 		</action>
-		
+
 		<action name="actRunTool" class="com.calow.ichat.admin.action.ToolAction"
 			method="actRunTool">
 		</action>
-		
+
 		<action name="runTool4ward" class="com.calow.ichat.admin.action.ToolAction"
 			method="runTool4ward">
 		</action>
-		
+
 	</package>
 
 	<package name="cgi" extends="struts-default" namespace="/cgi">
 		<action name="message_*" class="com.calow.ichat.api.action.MessageAction"
 			method="{1}"></action>
 	</package>
-	
+
 	<package name="msg" extends="struts-default" namespace="/user">
-		<action name="user_*" class="com.calow.ichat.api.action.LoginAction"
+		<action name="user_login" class="com.calow.ichat.api.action.LoginAction"
 			method="login">
 		</action>
+
+		<action name="user_register" class="com.calow.ichat.api.action.LoginAction"
+			method="register">
+		</action>
 	</package>
-	
+
 	<package name="csm" extends="struts-default" namespace="/csm">
 		<action name="message_send" class="com.calow.ichat.api.action.ClientMessageAction"
 			method="sendMessage">
 		</action>
 	</package>
-	
+
 	<package name="upanddown" extends="struts-default" namespace="/upanddown">
 		<action name="upload_file" class="com.calow.ichat.api.action.UploadAction"
 			method="uploadFile">
