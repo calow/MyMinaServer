@@ -45,6 +45,16 @@ public class LoginAction extends ActionSupport implements ModelDriven<User> {
 		postResult(response, datamap);
 		return null;
 	}
+	
+	public String search(){
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setHeader("Content-type", "text/html;charset=UTF-8");  
+		HttpServletRequest request = ServletActionContext.getRequest();
+		UserService userService = (UserService) ContextHolder.getBean("userService");
+		HashMap<String, Object> datamap = (HashMap<String, Object>) userService.searchUser(user, request);
+		postResult(response, datamap);
+		return null;
+	}
 
 	public void postResult(HttpServletResponse response,
 			HashMap<String, Object> datamap) {

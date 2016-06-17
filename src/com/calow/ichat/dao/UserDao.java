@@ -17,4 +17,6 @@ public interface UserDao {
 	public int getUserCount();
 	
 	public User getUserById(int userId);
+	
+	public String searchUser(String searchValue);
 }

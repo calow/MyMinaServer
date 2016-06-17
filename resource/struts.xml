@@ -106,6 +106,10 @@
 		<action name="user_register" class="com.calow.ichat.api.action.LoginAction"
 			method="register">
 		</action>
+		
+		<action name="user_search" class="com.calow.ichat.api.action.LoginAction"
+			method="search">
+		</action>
 	</package>
 
 	<package name="csm" extends="struts-default" namespace="/csm">

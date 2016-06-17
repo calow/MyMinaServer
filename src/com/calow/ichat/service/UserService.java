@@ -16,4 +16,7 @@ public interface UserService {
 	
 	public Map<String, Object> saveRegisterInfo(User user,
 			HttpServletRequest request);
+	
+	public Map<String, Object> searchUser(User user,
+			HttpServletRequest request);
 }

@@ -88,4 +88,22 @@ public class UserServiceImpl implements UserService {
 		return datamap;
 	}
 
+	@Override
+	public Map<String, Object> searchUser(User user,
+			HttpServletRequest request) {
+		if (user == null) {
+			try {
+				throw new Exception("user为空");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		HashMap<String, Object> datamap = new HashMap<String, Object>();
+		UserDao ud = (UserDao) ContextHolder.getBean("userDao");
+		String result = ud.searchUser(user.getULoginId());
+		datamap.put("code", 200);
+		datamap.put("result", result);
+		return datamap;
+	}
+
 }

@@ -184,4 +184,30 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public String searchUser(String searchValue) {
+		Session session = null;
+		JSONObject object = null;
+		JSONArray array = new JSONArray();
+		String hql = "From User u where u.ULoginId=:loginId OR u.UNickName LIKE :userName";
+		session = this.getSession();
+		Query query = session.createQuery(hql);
+		query.setParameter("loginId", searchValue);
+		query.setParameter("userName", "%" + searchValue + "%");
+		List<User> list = query.list();
+		if (list.size() > 0 && list != null) {
+			for(User u : list){
+				object = new JSONObject();
+				object.put("UID", u.getUId());
+				object.put("ULoginId", u.getULoginId());
+				object.put("UNickName", u.getUNickName());
+				object.put("USignture", u.getUSignture());
+				object.put("UState", u.getUserstate().getUsName());
+				array.add(object);
+			}
+		}
+		return array.toString();
+	}
+
 }
