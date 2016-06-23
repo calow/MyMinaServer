@@ -11,4 +11,6 @@ public interface GroupDao {
 	public Group getGroupByGroupId(int groupId);
 
 	public List<Groupusers> getGroupUsersByGroupId(int groupId);
+	
+	public int save(Group g);
 }

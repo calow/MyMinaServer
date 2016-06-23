@@ -110,6 +110,10 @@
 		<action name="user_search" class="com.calow.ichat.api.action.LoginAction"
 			method="search">
 		</action>
+		
+		<action name="user_add_friend_abs" class="com.calow.ichat.api.action.LoginAction"
+			method="addFriendAbs">
+		</action>
 	</package>
 
 	<package name="csm" extends="struts-default" namespace="/csm">

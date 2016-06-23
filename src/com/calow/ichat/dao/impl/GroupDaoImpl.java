@@ -35,4 +35,12 @@ public class GroupDaoImpl extends HibernateDaoSupport implements GroupDao {
 		return result;
 	}
 
+	@Override
+	public int save(Group g) {
+		int result = -1;
+		Session session = this.getSession();
+		result =  (Integer) session.save(g);
+		return result;
+	}
+
 }

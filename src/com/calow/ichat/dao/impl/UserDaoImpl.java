@@ -69,8 +69,12 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 				jsonObject.put("nickName", f.getUserByFFriendId()
 						.getUNickName());
 				jsonObject.put("remarkName", f.getFName());
-				jsonObject.put("signture", f.getUserByFFriendId()
-						.getUSignture());
+				if (f.getUserByFFriendId().getUSignture() != null) {
+					jsonObject.put("signture", f.getUserByFFriendId()
+							.getUSignture());
+				} else {
+					jsonObject.put("signture", "");
+				}
 				jsonArray.add(jsonObject);
 			}
 		}
@@ -116,8 +120,12 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 					object.put("nickName", f.getUserByFFriendId()
 							.getUNickName());
 					object.put("remarkName", f.getFName());
-					object.put("signture", f.getUserByFFriendId()
-							.getUSignture());
+					if (f.getUserByFFriendId().getUSignture() != null) {
+						object.put("signture", f.getUserByFFriendId()
+								.getUSignture());
+					} else {
+						object.put("signture", "");
+					}
 					object.put("onlineCode", f.getUserByFFriendId()
 							.getUserstate().getUsValue());
 					object.put("onlienValue", f.getUserByFFriendId()
@@ -186,28 +194,63 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public String searchUser(String searchValue) {
+	public String searchUser(String searchValue, String loginId) {
 		Session session = null;
 		JSONObject object = null;
 		JSONArray array = new JSONArray();
-		String hql = "From User u where u.ULoginId=:loginId OR u.UNickName LIKE :userName";
+		String sql = "SELECT u2.U_ID, u2.U_LoginID, u2.U_NickName,u2.U_Signture, ust.US_Name FROM `user` u2 INNER JOIN "
+				+ "(SELECT * FROM "
+				+ "(SELECT u.U_ID FROM `user` u WHERE (u.U_LoginID=:searchValue1 OR u.U_NickName LIKE :searchValue2) AND u.U_LoginID!=:loginId1) A "
+				+ "WHERE A.U_ID NOT IN "
+				+ "(SELECT f.F_FriendID FROM friend f INNER JOIN `user` u1 ON f.F_UserID = u1.U_ID WHERE u1.U_LoginID=:loginId2)) B "
+				+ "ON u2.U_ID = B.U_ID "
+				+ "INNER JOIN userstate ust ON u2.U_UserState = ust.US_ID";
+//		String hql = "From User u where u.ULoginId=:loginId OR u.UNickName LIKE :userName";
 		session = this.getSession();
-		Query query = session.createQuery(hql);
-		query.setParameter("loginId", searchValue);
-		query.setParameter("userName", "%" + searchValue + "%");
-		List<User> list = query.list();
-		if (list.size() > 0 && list != null) {
-			for(User u : list){
-				object = new JSONObject();
-				object.put("UID", u.getUId());
-				object.put("ULoginId", u.getULoginId());
-				object.put("UNickName", u.getUNickName());
-				object.put("USignture", u.getUSignture());
-				object.put("UState", u.getUserstate().getUsName());
-				array.add(object);
+//		Query query = session.createQuery(hql);
+//		query.setParameter("loginId", searchValue);
+//		query.setParameter("userName", "%" + searchValue + "%");
+//		List<User> list = query.list();
+//		if (list.size() > 0 && list != null) {
+//			for (User u : list) {
+//				object = new JSONObject();
+//				object.put("UID", u.getUId());
+//				object.put("ULoginId", u.getULoginId());
+//				object.put("UNickName", u.getUNickName());
+//				if (u.getUSignture() == null) {
+//					object.put("USignture", "");
+//				} else {
+//					object.put("USignture", u.getUSignture());
+//				}
+//				object.put("UState", u.getUserstate().getUsName());
+//				array.add(object);
+//			}
+//		}
+		SQLQuery query1 = session.createSQLQuery(sql);
+		query1.setParameter("searchValue1", searchValue);
+		query1.setParameter("searchValue2", "%" + searchValue + "%");
+		query1.setParameter("loginId1", loginId);
+		query1.setParameter("loginId2", loginId);
+		List<Object[]> list1 = query1.list();
+		for (Object[] o : list1) {
+			object = new JSONObject();
+			object.put("UID", o[0]);
+			object.put("ULoginId", o[1]);
+			object.put("UNickName", o[2]);
+			if(o[3] != null){
+				object.put("USignture", o[3]);
+			}else{
+				object.put("USignture", "");
 			}
+			object.put("UState", o[4]);
+			array.add(object);
 		}
 		return array.toString();
+	}
+
+	@Override
+	public String addFriendAbs(String loginId, String loginId2) {
+		return null;
 	}
 
 }

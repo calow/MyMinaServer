@@ -18,5 +18,7 @@ public interface UserDao {
 	
 	public User getUserById(int userId);
 	
-	public String searchUser(String searchValue);
+	public String searchUser(String searchValue, String loginId);
+	
+	public String addFriendAbs(String loginId1, String loginId2);
 }
