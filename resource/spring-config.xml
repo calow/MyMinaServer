@@ -93,6 +93,10 @@
 	<bean id="friendDao" class="com.calow.ichat.dao.impl.FriendDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
 	</bean>
+	
+	<bean id="groupUsersDao" class="com.calow.ichat.dao.impl.GroupUsersDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
+	</bean>
 
 	<!-- =============================================================== -->
 	<!-- 配置声明式事务 -->

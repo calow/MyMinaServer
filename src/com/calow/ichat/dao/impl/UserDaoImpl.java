@@ -130,7 +130,7 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 							.getUserstate().getUsValue());
 					object.put("onlienValue", f.getUserByFFriendId()
 							.getUserstate().getUsName());
-					// 获取私聊室Id-------------
+					// 获取私聊室Id和名称-------------
 					Query query3 = session.createQuery(groupId);
 					query3.setParameter("a2b", account + ":"
 							+ f.getUserByFFriendId().getULoginId());
@@ -138,7 +138,8 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao {
 							.getULoginId() + ":" + account);
 					List<Group> list3 = query3.list();
 					object.put("chatRoomId", list3.get(0).getGId());
-					// 获取私聊室Id-------------
+					object.put("chatRoomName", list3.get(0).getGName());
+					// 获取私聊室Id和名称-------------
 					array.add(object);
 				}
 			}
